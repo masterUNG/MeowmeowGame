@@ -86,7 +86,7 @@ public class MeowmeowGame extends ApplicationAdapter {
 		gameCar2Drop();
 
 		myBitmapFont = new BitmapFont(); //เพิ่งเปิด
-		myBitmapFont.setColor(Color.BLUE); //เพิ่งเปิด
+		myBitmapFont.setColor(Color.YELLOW); //เพิ่งเปิด
 
 		//Music Background
 		musicBackground = Gdx.audio.newMusic(Gdx.files.internal("music1.wav"));
@@ -110,7 +110,7 @@ public class MeowmeowGame extends ApplicationAdapter {
 
 	private void gameCarDrop() {
 		carRectangle = new com.badlogic.gdx.math.Rectangle();
-		carRectangle.x = MathUtils.random(150,300);
+		carRectangle.x = MathUtils.random(130,300);
 		carRectangle.y = 600; // จากขอบหน้าจอขวา -> ซ้าย
 		carRectangle.width = 64;
 		carRectangle.height = 64;
@@ -148,8 +148,12 @@ public class MeowmeowGame extends ApplicationAdapter {
 		batch.begin();
 
 		batch.draw(img, 0, 0); // วาดรูปภาพ Draw Background
-		myBitmapFont.draw(batch, "Score : "+score, 300, 300); //เพิ่งเปิด
-		myBitmapFont.draw(batch, "Live : "+live, 300, 200); //เพิ่งเปิด
+
+
+		batch.draw(imgCoins, 15, 350, 40, 40); //x,y,width,height
+		myBitmapFont.draw(batch, " : "+score, 70, 370); //เพิ่งเปิด
+		batch.draw(imgCat, 100, 350, 50, 50); //x,y,width,height
+		myBitmapFont.draw(batch, " x "+live, 150, 370); //เพิ่งเปิด
 
 		// Draw Cat
 		batch.draw(imgCat, catRectangle.x, catRectangle.y);
@@ -191,6 +195,7 @@ public class MeowmeowGame extends ApplicationAdapter {
 
 
 
+
 		// Check Time End of Drop
 		if(TimeUtils.nanoTime()-lastDropTime > 1E9){
 			gameCoinsDrop();
@@ -204,19 +209,14 @@ public class MeowmeowGame extends ApplicationAdapter {
 			Rectangle objMyCoins = objIterator.next();
 			objMyCoins.y -=200 * Gdx.graphics.getDeltaTime();
 
-/*
 			if(objMyCoins.y + 64<0){
 				objIterator.remove();
-				score--;
-				live--;
-				soundFalse.play();
-			}// if
+			}
 			if(objMyCoins.overlaps(catRectangle)){
 				soundSuccess.play();
 				score++;
 				objIterator.remove();
 			}
-*/
 
 		} // while
 
@@ -225,6 +225,13 @@ public class MeowmeowGame extends ApplicationAdapter {
 		while (objIteratorCar.hasNext()) {
 			Rectangle objMyCar = objIteratorCar.next();
 			objMyCar.y -= 500 * Gdx.graphics.getDeltaTime();
+
+			if(objMyCar.y + 64<0){
+
+				live--;
+				soundFalse.play();
+				objIteratorCar.remove();
+			}
 		}
 
 		objIteratorCar2 = objCarDrop2.iterator();
