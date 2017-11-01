@@ -34,10 +34,20 @@ public class MeowmeowGame extends ApplicationAdapter {
 	private Iterator<com.badlogic.gdx.math.Rectangle> objIterator;
 	private Sound soundSuccess, soundFalse;
 
+	public int score;
+	public int live;
+	public static final int INCREASE_1LIVE_INTERVAL = 50;
+
 
 
 
 	public void create () {
+		//Score
+		score = 0;
+
+		// Live
+		live = 3;
+
 		batch = new SpriteBatch();
 		img = new Texture("BG.png");
 
@@ -63,8 +73,8 @@ public class MeowmeowGame extends ApplicationAdapter {
 
 
 
-		//myBitmapFont = new BitmapFont();
-		//myBitmapFont.setColor(Color.BLUE);
+		myBitmapFont = new BitmapFont(); //เพิ่งเปิด
+		myBitmapFont.setColor(Color.BLUE); //เพิ่งเปิด
 
 		//Music Background
 		musicBackground = Gdx.audio.newMusic(Gdx.files.internal("music1.wav"));
@@ -107,7 +117,8 @@ public class MeowmeowGame extends ApplicationAdapter {
 		batch.begin();
 
 		batch.draw(img, 0, 0);
-		//myBitmapFont.draw(batch, "North Tps", 300, 300);
+		myBitmapFont.draw(batch, "Score : "+score, 300, 300); //เพิ่งเปิด
+		myBitmapFont.draw(batch, "Live : "+live, 300, 200); //เพิ่งเปิด
 
 		// Draw Cat
 		batch.draw(imgCat, catRectangle.x, catRectangle.y);
@@ -147,10 +158,13 @@ public class MeowmeowGame extends ApplicationAdapter {
 			objMyCoins.y -=200 * Gdx.graphics.getDeltaTime();
 			if(objMyCoins.y + 64<0){
 				objIterator.remove();
+				score--;
+				live--;
 				soundFalse.play();
 			}// if
 			if(objMyCoins.overlaps(catRectangle)){
 				soundSuccess.play();
+				score++;
 				objIterator.remove();
 			}
 
